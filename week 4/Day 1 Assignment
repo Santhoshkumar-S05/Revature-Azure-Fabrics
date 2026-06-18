@@ -1,0 +1,415 @@
+Day 1 Assignment – Spark Ecosystem / Architecture
+1. What is Apache Spark?
+
+Apache Spark is an open-source distributed data processing framework designed for fast and large-scale data processing. It was developed at the University of California, Berkeley, and later became an Apache Software Foundation project.
+
+Spark processes massive datasets across multiple machines in parallel and supports:
+
+Batch Processing
+Real-Time Stream Processing
+Machine Learning
+Graph Processing
+Interactive SQL Queries
+Key Features
+In-memory computation
+Fault tolerance
+Distributed processing
+High performance
+Multi-language support (Python, Scala, Java, R)
+Example
+
+Instead of processing 1 TB of data on a single machine, Spark distributes the data across multiple nodes and processes them simultaneously.
+
+2. Why Apache Spark When We Have Hadoop?
+Hadoop MapReduce Limitations
+Hadoop MapReduce	Apache Spark
+Disk-based processing	In-memory processing
+Slower execution	Faster execution
+Complex coding	Easy APIs
+Separate tools needed	Unified framework
+Not suitable for iterative ML	Excellent for ML
+Why Spark?
+
+Spark stores intermediate data in memory instead of writing to disk repeatedly.
+
+Example
+
+Machine Learning algorithms require multiple iterations.
+
+Hadoop writes results to disk after every iteration.
+Spark keeps data in memory.
+
+Result:
+
+Hadoop → Slow
+Spark → Up to 100x faster
+Spark + Hadoop
+
+Spark does not replace Hadoop completely.
+
+Common architecture:
+
+HDFS → Storage
+
+Spark → Processing
+
+3. Spark Ecosystem and Framework Components
+
+Apache Spark consists of several modules.
+
+Spark Ecosystem
+Apache Spark
+│
+├── Spark Core
+├── Spark SQL
+├── Spark Streaming
+├── MLlib
+├── GraphX
+└── SparkR
+3.1 Spark Core
+
+Foundation of Spark.
+
+Responsibilities:
+
+Task scheduling
+Memory management
+Fault recovery
+Resource allocation
+
+Functions:
+
+RDD operations
+Job execution
+Cluster communication
+3.2 Spark SQL
+
+Used for structured data processing.
+
+Features:
+
+SQL Queries
+DataFrames
+Datasets
+
+Example:
+
+df = spark.read.csv("employees.csv")
+df.show()
+
+Supports:
+
+Hive
+Parquet
+JSON
+CSV
+3.3 Spark Streaming
+
+Processes real-time data streams.
+
+Sources:
+
+Kafka
+Flume
+Socket Streams
+
+Applications:
+
+Fraud Detection
+IoT Data Processing
+Live Monitoring
+3.4 MLlib
+
+Machine Learning library.
+
+Provides:
+
+Classification
+Regression
+Clustering
+Recommendation Systems
+
+Algorithms:
+
+Linear Regression
+Random Forest
+K-Means
+3.5 GraphX
+
+Used for graph processing.
+
+Applications:
+
+Social Networks
+Recommendation Systems
+Network Analysis
+3.6 SparkR
+
+R language interface for Spark.
+
+Used mainly by:
+
+Data Scientists
+Statisticians
+4. How Spark Manages Data Processing with ETL?
+
+ETL = Extract + Transform + Load
+
+Step 1: Extract
+
+Read data from:
+
+CSV
+JSON
+MySQL
+Oracle
+HDFS
+Data Lake
+
+Example:
+
+df = spark.read.csv("employee.csv")
+Step 2: Transform
+
+Operations:
+
+Filter
+Join
+Aggregate
+Remove Nulls
+
+Example:
+
+df.filter(df.salary > 50000)
+Step 3: Load
+
+Store transformed data into:
+
+Data Warehouse
+Database
+Data Lake
+
+Example:
+
+df.write.csv("output/")
+ETL Flow
+Source Data
+     ↓
+ Extract
+     ↓
+ Transform
+     ↓
+ Load
+     ↓
+ Target System
+
+Spark performs these operations in a distributed manner across worker nodes.
+
+5. How Do You Configure Driver and Executors?
+Driver
+
+Acts as the brain of Spark application.
+
+Responsibilities:
+
+Create SparkContext
+Schedule tasks
+Coordinate executors
+
+Configuration:
+
+--driver-memory 4G
+
+Example:
+
+spark-submit --driver-memory 4G app.py
+Executors
+
+Worker processes responsible for executing tasks.
+
+Configuration:
+
+--executor-memory 8G
+--num-executors 4
+--executor-cores 2
+
+Example:
+
+spark-submit \
+--num-executors 4 \
+--executor-memory 8G \
+--executor-cores 2 \
+app.py
+6. Spark Architecture and End-to-End Execution Flow
+Components
+Client
+  ↓
+Driver Program
+  ↓
+Cluster Manager
+  ↓
+Executors
+  ↓
+Data Storage
+Driver Program
+
+Responsible for:
+
+Creating SparkSession
+Building DAG
+Scheduling tasks
+Cluster Manager
+
+Allocates resources.
+
+Examples:
+
+Standalone
+YARN
+Mesos
+Kubernetes
+Executors
+
+Execute tasks and return results.
+
+End-to-End Flow
+
+Step 1:
+
+User submits application.
+
+spark-submit app.py
+
+Step 2:
+
+Driver starts.
+
+Step 3:
+
+Spark creates DAG.
+
+Step 4:
+
+Cluster manager allocates executors.
+
+Step 5:
+
+Tasks distributed to executors.
+
+Step 6:
+
+Executors process data.
+
+Step 7:
+
+Results sent back to driver.
+
+Step 8:
+
+Output stored.
+
+Execution Diagram
+User
+ ↓
+Spark Submit
+ ↓
+Driver
+ ↓
+Cluster Manager
+ ↓
+Executors
+ ↓
+Data Processing
+ ↓
+Results
+7. How Do We Send Requests for Data Processing?
+
+Using:
+
+spark-submit
+
+This command submits Spark applications to a cluster.
+
+Basic Syntax
+spark-submit app.py
+Common Configuration Parameters
+Application Name
+--name EmployeeETL
+Driver Memory
+--driver-memory 4G
+Executor Memory
+--executor-memory 8G
+Number of Executors
+--num-executors 5
+Executor Cores
+--executor-cores 2
+Deploy Mode
+--deploy-mode cluster
+Example
+spark-submit \
+--master yarn \
+--deploy-mode cluster \
+--num-executors 5 \
+--executor-memory 8G \
+--executor-cores 2 \
+employee_etl.py
+8. Spark Deployment Modes and Usage
+1. Local Mode
+
+Runs Spark on a single machine.
+
+--master local[*]
+
+Use for:
+
+Learning
+Development
+Testing
+2. Standalone Mode
+
+Spark's own cluster manager.
+
+--master spark://master:7077
+
+Use for:
+
+Small to medium clusters
+3. YARN Mode
+
+Runs Spark on Hadoop YARN.
+
+--master yarn
+
+Use for:
+
+Hadoop environments
+Enterprise systems
+4. Kubernetes Mode
+
+Runs Spark inside Kubernetes.
+
+--master k8s://...
+
+Use for:
+
+Cloud-native deployments
+Containerized environments
+Deploy Modes
+Client Mode
+Driver → Local Machine
+Executors → Cluster
+
+Use when:
+
+Debugging
+Development
+--deploy-mode client
+Cluster Mode
+Driver → Cluster
+Executors → Cluster
+
+Use when:
+
+Production workloads
+Long-running jobs
+--deploy-mode cluster
