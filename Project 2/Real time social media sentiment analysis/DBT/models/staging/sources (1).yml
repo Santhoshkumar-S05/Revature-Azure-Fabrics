@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: silver
+    database: silver_catalog1
+    schema: processed
+
+    tables:
+      - name: silver_valid_tweets
+      - name: silver_sentiment
+      - name: silver_trends
+      - name: silver_user_metadata
+      - name: silver_tweets
